@@ -11,7 +11,7 @@
     /* 优化后的字体设置 */
     @font-face {
       font-family: 'KaiTi';
-      src: local('KaiTi'),         /* 本地系统楷体 */
+      src: 
            local('STKaiti'),       /* 苹果系统楷体 */
            url('https://example.com/kaiti.ttf') format('truetype'); /* 备用在线字体 */
       font-weight: normal;
@@ -20,7 +20,7 @@
 
         /* 全局样式 */
         body {
-            font-family: 'KaiTi', serif;
+            font-family: 'KaiTi', '华文楷体', '楷体', serif; /* 多级字体回退 */
             background-color: #f5f5dc;
             color: #333;
             margin: 0;
