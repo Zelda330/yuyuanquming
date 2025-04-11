@@ -27,7 +27,7 @@
         }
 
         /* 头部样式 */
-        .header {
+       .header {
             text-align: center;
             padding: 40px 0;
             position: relative;
@@ -49,7 +49,7 @@
         }
 
         /* 主体样式 */
-        .main {
+       .main {
             max-width: 1000px;
             margin: 0 auto;
             padding: 40px;
@@ -59,7 +59,7 @@
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
         }
 
-        .name-option {
+       .name-option {
             margin-bottom: 30px;
             padding: 20px;
             border: 1px solid #bcaaa4;
@@ -72,7 +72,7 @@
             flex-wrap: wrap;
         }
 
-        .name-option:hover {
+       .name-option:hover {
             transform: scale(1.02);
             background-color: rgba(245, 240, 235, 0.8);
         }
@@ -146,7 +146,7 @@
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
         }
 
-        .section-title {
+       .section-title {
             font-size: 28px;
             color: #795548;
             font-weight: bold;
@@ -162,7 +162,7 @@
             padding: 0 20px;
         }
 
-        .bar {
+       .bar {
             width: 8%;
             background-color: #795548;
             border-radius: 5px 5px 0 0;
@@ -170,7 +170,7 @@
             transition: all 0.3s ease;
         }
 
-        .bar:hover {
+       .bar:hover {
             transform: scaleY(1.05);
         }
 
@@ -196,7 +196,7 @@
         }
 
         /* 信息部分样式 */
-        .info-section {
+       .info-section {
             margin-top: 20px;
             width: 100%;
             display: flex;
@@ -204,14 +204,14 @@
             gap: 10px;
         }
 
-        .info-section div {
+       .info-section div {
             padding: 10px;
             border: 1px solid #bcaaa4;
             border-radius: 5px;
             background-color: rgba(255, 255, 255, 0.8);
         }
 
-        .info-title {
+       .info-title {
             font-size: 18px;
             color: #795548;
             margin-bottom: 5px;
@@ -324,8 +324,10 @@
 
         // 显示投票选项
         function displayNameOptions() {
+            console.log('displayNameOptions function called');
             const nameOptions = document.getElementById('nameOptions');
             names.forEach(name => {
+                console.log('Processing name:', name);
                 const option = document.createElement('div');
                 option.classList.add('name-option');
 
