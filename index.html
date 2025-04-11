@@ -59,7 +59,8 @@
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
         }
 
-       .name-option {
+        /* 移除类名前多余空格 */
+        .name-option {
             margin-bottom: 30px;
             padding: 20px;
             border: 1px solid #bcaaa4;
@@ -72,7 +73,7 @@
             flex-wrap: wrap;
         }
 
-       .name-option:hover {
+        .name-option:hover {
             transform: scale(1.02);
             background-color: rgba(245, 240, 235, 0.8);
         }
@@ -195,8 +196,8 @@
             font-size: 14px;
         }
 
-        /* 信息部分样式 */
-       .info-section {
+        /* 移除类名前多余空格 */
+        .info-section {
             margin-top: 20px;
             width: 100%;
             display: flex;
@@ -204,7 +205,7 @@
             gap: 10px;
         }
 
-       .info-section div {
+        .info-section div {
             padding: 10px;
             border: 1px solid #bcaaa4;
             border-radius: 5px;
@@ -236,198 +237,212 @@
         </div>
     </div>
     <script type="module">
-        // 引入 Firebase SDK
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js";
-        import { getDatabase, ref, update, onValue, increment } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-database.js";
+        try {
+            // 引入 Firebase SDK
+            import { initializeApp } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js";
+            import { getDatabase, ref, update, onValue, increment } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-database.js";
 
-        // 你的 Firebase 配置信息
-        const firebaseConfig = {
-            apiKey: "AIzaSyBXU75YJBs5iV8RBncXZ0Q0Be4nKGMJVYI",
-            authDomain: "yuyuan-vote.firebaseapp.com",
-            databaseURL: "https://yuyuan-vote-default-rtdb.asia-southeast1.firebasedatabase.app",
-            projectId: "yuyuan-vote",
-            storageBucket: "yuyuan-vote.firebasestorage.app",
-            messagingSenderId: "16803060355",
-            appId: "1:16803060355:web:ca4f659f04b72a9cda59b6"
-        };
+            console.log('Firebase SDK 引入成功');
 
-        // 初始化 Firebase
-        const app = initializeApp(firebaseConfig);
-        // 获取数据库实例
-        const database = getDatabase(app);
+            // 你的 Firebase 配置信息
+            const firebaseConfig = {
+                apiKey: "AIzaSyBXU75YJBs5iV8RBncXZ0Q0Be4nKGMJVYI",
+                authDomain: "yuyuan-vote.firebaseapp.com",
+                databaseURL: "https://yuyuan-vote-default-rtdb.asia-southeast1.firebasedatabase.app",
+                projectId: "yuyuan-vote",
+                storageBucket: "yuyuan-vote.firebasestorage.app",
+                messagingSenderId: "16803060355",
+                appId: "1:16803060355:web:ca4f659f04b72a9cda59b6"
+            };
 
-        const names = ['金墨竹', '金徽雪', '金徽宁', '金安然', '金逸宁', '金照卿', '金砚晴', '金灵逍', '金灵毓', '金乐筠'];
-        let selectedNames = [];
+            // 初始化 Firebase
+            const app = initializeApp(firebaseConfig);
+            console.log('Firebase 初始化成功');
+            // 获取数据库实例
+            const database = getDatabase(app);
 
-        const info = {
-            '金墨竹': {
-                '字意解析': '墨：《说文》载 “书墨也”，由松烟制成，代表文采学识（属土，土主信、稳重）。竹：依《尔雅》“冬生草”，中空有节，寓意高洁虚心（属木，木主仁、贵显）。',
-                '文化溯源': '文同绘《墨竹图》题诗 “拟将一段鹅溪绢，扫取寒梢万尺长”，尽显君子风姿；郑燮《竹石》“咬定青山不放松” 赞竹坚韧，苏轼 “诗画本一律” 道墨竹神韵，尽显墨竹高雅。',
-                '美好内涵': '期望她如宣纸墨竹，墨韵沉淀知识，竹节支撑风骨，叶摇清韵，既有文人雅致，又具草木朝气，人生满是诗意。',
-                '五行精义': '墨（土）生竹（木），土为根基，滋养木生长，象征才学深厚、品格端直，得贵人助，节节高升，贵显不骄。'
-            },
-            '金徽雪': {
-                '字意解析': '徽：《尔雅》释 “徽，美也”，为美好标识（属金，金主贵、刚健）。雪：据《说文》“冰雨说物者”，冰晶纯净（属水，水主智、灵动）。',
-                '文化溯源': '李之仪《千秋岁・咏琴》云 “金徽泛处，漏声犹滴”，琴徽映雪，韵意幽远；岑参笔下 “忽如一夜春风来” 绘雪壮美，卢纶诗 “雪满山中高士卧” 显雪孤高，雪徽相衬，高洁不凡。',
-                '美好内涵': '宛如金徽雪光，徽是琴徽精致，雪为天地洁白，望她眸含雪澈，心怀徽耀，如寒梅映雪般清冷高贵，似玉徽照月般优雅自在，一生纯净无瑕。',
-                '五行精义': '徽（金）生水（雪），金使水清澈，主聪慧贵气，寓意天资颖慧、贵气内蕴，得贵人相帮，福泽悠长。'
-            },
-            '金徽宁': {
-                '字意解析': '徽：意同前，表美好出众（属金）。宁：《尔雅》解 “宁，安也”，含安定平和意（属火，火主贵气、光明）。',
-                '文化溯源': '《诗经・小雅》“丧乱既平，既安且宁”，祈愿安宁；陶渊明《归园田居》“户庭无尘杂，虚室有余闲”，述内心安宁；韦应物 “宁知草间人，腰下有龙泉”，展淡泊坚韧，尽显 “徽宁” 意蕴。',
-                '美好内涵': '“徽” 显外在风采，“宁” 守内心安宁。盼她如徽音清亮出众，像宁日静谧从容，于喧嚣守静，在繁华守真，恰似明月松间照，一生徽光闪耀，内心安宁。',
-                '五行精义': '徽（金）生火（宁），火映金辉，主贵人助、家庭和，寓意贵显不躁，安暖常伴。'
-            },
-            '金安然': {
-                '字意解析': '安：《说文》讲 “静也”，宀下有女，寓平安顺遂（属土，土主稳、根基）。然：《玉篇》称 “如此”，含通达自然意（属火，火主礼、贵显）。',
-                '文化溯源': '《论语》“仁者安仁，知者利仁”，点明心安为仁基；陶渊明 “久在樊笼里，复得返自然”，绘自在之态；苏轼 “回首向来萧瑟处，归去，也无风雨也无晴”，含安然豁达，尽显安然境界。',
-                '美好内涵': '“安” 是家人围坐的温馨，“然” 是水穷云起的豁达。愿她如春山安卧般静好，如秋风飒然般清朗，岁月里安守本心，顺应自然，心怀丘壑，眼含温柔。',
-                '五行精义': '安（土）生火（然），土育火燃，主根基稳、前路明，象征贵人运强，一生平安顺遂。'
-            },
-            '金逸宁': {
-                '字意解析': '逸：《说文》“失也，从辵兔”，有超脱自在、安乐意（属土，土主稳、包容）。宁：同前，表安定平和（属火，火主贵气、光明）。',
-                '文化溯源': '陶渊明《归去来兮辞》“策扶老以流憩，时矫首而遐观”，逸趣悠然；《诗经・大雅》“民之质矣，日用饮食，群黎百姓，遍为尔德”，含社稷安宁愿；庄子《逍遥游》“夫列子御风而行，泠然善也”，显逸宁之态。',
-                '美好内涵': '“逸” 是东篱采菊的悠然，“宁” 是灯火可亲的安稳。望她似逸云自在，如宁月清幽，不为俗务所困，不被变迁惊扰，逸享人生，坚守初心，安宁常伴。',
-                '五行精义': '逸（土）生火（宁），土厚火明，主安稳贵显，寓意稳如泰山、心怀光明，得贵人助，舒逸顺遂。'
-            },
-            '金照卿': {
-                '字意解析': '照：《说文》“明也”，从火，意喻智慧光明（属火，火主礼、光明）。卿：《尔雅》“卿，君也”，尊称贤能，饱含温婉贵气（属木，木主仁、贵显）。',
-                '文化溯源': '苏轼 “一点浩然气，千里快哉风”，照如心灯破雾；《诗经・卫风》“硕人其颀，公侯之卿”，卿为才德兼备之范；李白 “永结无情游，相期邈云汉”，卿含知己深情，照卿相辉，熠熠生辉。',
-                '美好内涵': '“照” 若朝晖耀空，“卿” 似佳人临水。祈愿她目光含星，心怀暖光，凭智慧照亮前路，以温柔待人处世，如晨光照亮青空般璀璨，似春风拂过般和煦，一生温润而贵显。',
-                '五行精义': '照（火）生卿（木），火燃木荣，主声名远播，象征以智启仁，贵人运盛，德馨名显，亲和友善。'
-            },
-            '金砚晴': {
-                '字意解析': '砚：《说文》“石滑也”，为文房重宝，寓学识深厚（属土，土主信、厚重）。晴：《尔雅》“晴，雨止也”，从日，代表开朗光明（属火，火主礼、贵显）。',
-                '文化溯源': '米芾《砚史》称 “砚，文之田也”，砚田墨耕，才思涌现；刘禹锡 “晴空一鹤排云上，便引诗情到碧霄”，晴含壮志；陆游 “晴窗细乳戏分茶”，绘文人晴日雅趣，尽显砚晴之妙。',
-                '美好内涵': '“砚” 为墨池化龙才，“晴” 是云开日出时。盼她以砚作舟，学海远航；凭晴为翼，翱翔天地，胸藏万卷，心怀暖阳，似砚凝墨香般醇厚，如晴展虹光般绚烂，一生勤勉向学，前程光明。',
-                '五行精义': '砚（土）生火（晴），土厚火明，主安稳贵显，寓意稳如泰山、心怀光明，得贵人助，舒逸顺遂。'
-            },
-            '金灵逍': {
-                '字意解析': '灵：《说文》“灵，灵巫也，以玉事神”，象征灵动聪慧（属火，火主礼、光明）。逍：《说文》“逍遥，犹翱翔也”，寓意自在洒脱（属金，金主贵、刚健）。',
-                '文化溯源': '屈原《离骚》“灵氛既告余以吉占兮，历吉日乎吾将行”，灵显神秘高贵；庄子《逍遥游》“逍遥于天地之间而心意自得”，逍表自在豁达，灵逍组合，尽显灵动洒脱之姿。',
-                '美好内涵': '期望她如灵动精灵，怀揣智慧，逍遥于天地间，不被世俗羁绊，似火般热情开朗，如金般高贵坚强，一生充满活力与自由。',
-                '五行精义': '灵（火）克金（逍），火炼金纯，主磨砺成才，象征历经考验，成就高贵品格，贵人运旺，福泽深厚。'
-            },
-            '金灵毓': {
-                '字意解析': '灵：同前，表灵动聪慧（属火）。毓：《说文》“毓，育也”，有孕育、培养之意（属木，木主仁、贵显）。',
-                '文化溯源': '《国语・晋语》“黩则生怨，怨则毓灾”，毓含培育生机；王维 “灵境信为绝，法堂深更幽”，灵显空灵神秘，灵毓结合，寓意聪慧且富有生命力。',
-                '美好内涵': '愿她如灵动仙子，聪慧伶俐，孕育美好未来，似火般温暖他人，如木般茁壮成长，一生充满希望与活力。',
-                '五行精义': '灵（火）生毓（木），火木相生，主生机盎然，象征智慧开启仁爱，贵人相助，事业有成，家庭和睦。'
-            },
-            '金乐筠': {
-                '字意解析': '乐：《说文》“乐，五声八音总名”，代表快乐、乐观（属火，火主礼、光明）。筠：《说文》“筠，竹皮也”，寓意坚韧不拔（属木，木主仁、贵显）。',
-                '文化溯源': '《论语》“知之者不如好之者，好之者不如乐之者”，乐显积极态度；郑燮《竹石》“千磨万击还坚劲，任尔东西南北风”，筠表坚韧品格，乐筠搭配，尽显乐观坚韧之态。',
-                '美好内涵': '希望她如欢快音符，乐观面对生活，似翠竹般坚韧不拔，在风雨中茁壮成长，如火焰般温暖他人，如树木般庇佑家人，一生幸福美满。',
-                '五行精义': '乐（火）生筠（木），火木相生，主活力充沛，象征以乐观培育仁爱，贵人运佳，生活顺遂，事业有成。'
-            }
-        };
+            const names = ['金墨竹', '金徽雪', '金徽宁', '金安然', '金逸宁', '金照卿', '金砚晴', '金灵逍', '金灵毓', '金乐筠'];
+            let selectedNames = [];
 
-        // 显示投票选项
-        function displayNameOptions() {
-            console.log('displayNameOptions function called');
-            const nameOptions = document.getElementById('nameOptions');
-            names.forEach(name => {
-                console.log('Processing name:', name);
-                const option = document.createElement('div');
-                option.classList.add('name-option');
+            const info = {
+                '金墨竹': {
+                    '字意解析': '墨：《说文》载 “书墨也”，由松烟制成，代表文采学识（属土，土主信、稳重）。竹：依《尔雅》“冬生草”，中空有节，寓意高洁虚心（属木，木主仁、贵显）。',
+                    '文化溯源': '文同绘《墨竹图》题诗 “拟将一段鹅溪绢，扫取寒梢万尺长”，尽显君子风姿；郑燮《竹石》“咬定青山不放松” 赞竹坚韧，苏轼 “诗画本一律” 道墨竹神韵，尽显墨竹高雅。',
+                    '美好内涵': '期望她如宣纸墨竹，墨韵沉淀知识，竹节支撑风骨，叶摇清韵，既有文人雅致，又具草木朝气，人生满是诗意。',
+                    '五行精义': '墨（土）生竹（木），土为根基，滋养木生长，象征才学深厚、品格端直，得贵人助，节节高升，贵显不骄。'
+                },
+                '金徽雪': {
+                    '字意解析': '徽：《尔雅》释 “徽，美也”，为美好标识（属金，金主贵、刚健）。雪：据《说文》“冰雨说物者”，冰晶纯净（属水，水主智、灵动）。',
+                    '文化溯源': '李之仪《千秋岁・咏琴》云 “金徽泛处，漏声犹滴”，琴徽映雪，韵意幽远；岑参笔下 “忽如一夜春风来” 绘雪壮美，卢纶诗 “雪满山中高士卧” 显雪孤高，雪徽相衬，高洁不凡。',
+                    '美好内涵': '宛如金徽雪光，徽是琴徽精致，雪为天地洁白，望她眸含雪澈，心怀徽耀，如寒梅映雪般清冷高贵，似玉徽照月般优雅自在，一生纯净无瑕。',
+                    '五行精义': '徽（金）生水（雪），金使水清澈，主聪慧贵气，寓意天资颖慧、贵气内蕴，得贵人相帮，福泽悠长。'
+                },
+                '金徽宁': {
+                    '字意解析': '徽：意同前，表美好出众（属金）。宁：《尔雅》解 “宁，安也”，含安定平和意（属火，火主贵气、光明）。',
+                    '文化溯源': '《诗经・小雅》“丧乱既平，既安且宁”，祈愿安宁；陶渊明《归园田居》“户庭无尘杂，虚室有余闲”，述内心安宁；韦应物 “宁知草间人，腰下有龙泉”，展淡泊坚韧，尽显 “徽宁” 意蕴。',
+                    '美好内涵': '“徽” 显外在风采，“宁” 守内心安宁。盼她如徽音清亮出众，像宁日静谧从容，于喧嚣守静，在繁华守真，恰似明月松间照，一生徽光闪耀，内心安宁。',
+                    '五行精义': '徽（金）生火（宁），火映金辉，主贵人助、家庭和，寓意贵显不躁，安暖常伴。'
+                },
+                '金安然': {
+                    '字意解析': '安：《说文》讲 “静也”，宀下有女，寓平安顺遂（属土，土主稳、根基）。然：《玉篇》称 “如此”，含通达自然意（属火，火主礼、贵显）。',
+                    '文化溯源': '《论语》“仁者安仁，知者利仁”，点明心安为仁基；陶渊明 “久在樊笼里，复得返自然”，绘自在之态；苏轼 “回首向来萧瑟处，归去，也无风雨也无晴”，含安然豁达，尽显安然境界。',
+                    '美好内涵': '“安” 是家人围坐的温馨，“然” 是水穷云起的豁达。愿她如春山安卧般静好，如秋风飒然般清朗，岁月里安守本心，顺应自然，心怀丘壑，眼含温柔。',
+                    '五行精义': '安（土）生火（然），土育火燃，主根基稳、前路明，象征贵人运强，一生平安顺遂。'
+                },
+                '金逸宁': {
+                    '字意解析': '逸：《说文》“失也，从辵兔”，有超脱自在、安乐意（属土，土主稳、包容）。宁：同前，表安定平和（属火，火主贵气、光明）。',
+                    '文化溯源': '陶渊明《归去来兮辞》“策扶老以流憩，时矫首而遐观”，逸趣悠然；《诗经・大雅》“民之质矣，日用饮食，群黎百姓，遍为尔德”，含社稷安宁愿；庄子《逍遥游》“夫列子御风而行，泠然善也”，显逸宁之态。',
+                    '美好内涵': '“逸” 是东篱采菊的悠然，“宁” 是灯火可亲的安稳。望她似逸云自在，如宁月清幽，不为俗务所困，不被变迁惊扰，逸享人生，坚守初心，安宁常伴。',
+                    '五行精义': '逸（土）生火（宁），土厚火明，主安稳贵显，寓意稳如泰山、心怀光明，得贵人助，舒逸顺遂。'
+                },
+                '金照卿': {
+                    '字意解析': '照：《说文》“明也”，从火，意喻智慧光明（属火，火主礼、光明）。卿：《尔雅》“卿，君也”，尊称贤能，饱含温婉贵气（属木，木主仁、贵显）。',
+                    '文化溯源': '苏轼 “一点浩然气，千里快哉风”，照如心灯破雾；《诗经・卫风》“硕人其颀，公侯之卿”，卿为才德兼备之范；李白 “永结无情游，相期邈云汉”，卿含知己深情，照卿相辉，熠熠生辉。',
+                    '美好内涵': '“照” 若朝晖耀空，“卿” 似佳人临水。祈愿她目光含星，心怀暖光，凭智慧照亮前路，以温柔待人处世，如晨光照亮青空般璀璨，似春风拂过般和煦，一生温润而贵显。',
+                    '五行精义': '照（火）生卿（木），火燃木荣，主声名远播，象征以智启仁，贵人运盛，德馨名显，亲和友善。'
+                },
+                '金砚晴': {
+                    '字意解析': '砚：《说文》“石滑也”，为文房重宝，寓学识深厚（属土，土主信、厚重）。晴：《尔雅》“晴，雨止也”，从日，代表开朗光明（属火，火主礼、贵显）。',
+                    '文化溯源': '米芾《砚史》称 “砚，文之田也”，砚田墨耕，才思涌现；刘禹锡 “晴空一鹤排云上，便引诗情到碧霄”，晴含壮志；陆游 “晴窗细乳戏分茶”，绘文人晴日雅趣，尽显砚晴之妙。',
+                    '美好内涵': '“砚” 为墨池化龙才，“晴” 是云开日出时。盼她以砚作舟，学海远航；凭晴为翼，翱翔天地，胸藏万卷，心怀暖阳，似砚凝墨香般醇厚，如晴展虹光般绚烂，一生勤勉向学，前程光明。',
+                    '五行精义': '砚（土）生火（晴），土厚火明，主安稳贵显，寓意稳如泰山、心怀光明，得贵人助，舒逸顺遂。'
+                },
+                '金灵逍': {
+                    '字意解析': '灵：《说文》“灵，灵巫也，以玉事神”，象征灵动聪慧（属火，火主礼、光明）。逍：《说文》“逍遥，犹翱翔也”，寓意自在洒脱（属金，金主贵、刚健）。',
+                    '文化溯源': '屈原《离骚》“灵氛既告余以吉占兮，历吉日乎吾将行”，灵显神秘高贵；庄子《逍遥游》“逍遥于天地之间而心意自得”，逍表自在豁达，灵逍组合，尽显灵动洒脱之姿。',
+                    '美好内涵': '期望她如灵动精灵，怀揣智慧，逍遥于天地间，不被世俗羁绊，似火般热情开朗，如金般高贵坚强，一生充满活力与自由。',
+                    '五行精义': '灵（火）克金（逍），火炼金纯，主磨砺成才，象征历经考验，成就高贵品格，贵人运旺，福泽深厚。'
+                },
+                '金灵毓': {
+                    '字意解析': '灵：同前，表灵动聪慧（属火）。毓：《说文》“毓，育也”，有孕育、培养之意（属木，木主仁、贵显）。',
+                    '文化溯源': '《国语・晋语》“黩则生怨，怨则毓灾”，毓含培育生机；王维 “灵境信为绝，法堂深更幽”，灵显空灵神秘，灵毓结合，寓意聪慧且富有生命力。',
+                    '美好内涵': '愿她如灵动仙子，聪慧伶俐，孕育美好未来，似火般温暖他人，如木般茁壮成长，一生充满希望与活力。',
+                    '五行精义': '灵（火）生毓（木），火木相生，主生机盎然，象征智慧开启仁爱，贵人相助，事业有成，家庭和睦。'
+                },
+                '金乐筠': {
+                    '字意解析': '乐：《说文》“乐，五声八音总名”，代表快乐、乐观（属火，火主礼、光明）。筠：《说文》“筠，竹皮也”，寓意坚韧不拔（属木，木主仁、贵显）。',
+                    '文化溯源': '《论语》“知之者不如好之者，好之者不如乐之者”，乐显积极态度；郑燮《竹石》“千磨万击还坚劲，任尔东西南北风”，筠表坚韧品格，乐筠搭配，尽显乐观坚韧之态。',
+                    '美好内涵': '希望她如欢快音符，乐观面对生活，似翠竹般坚韧不拔，在风雨中茁壮成长，如火焰般温暖他人，如树木般庇佑家人，一生幸福美满。',
+                    '五行精义': '乐（火）生筠（木），火木相生，主活力充沛，象征以乐观培育仁爱，贵人运佳，生活顺遂，事业有成。'
+                }
+            };
 
-                const checkbox = document.createElement('input');
-                checkbox.type = 'checkbox';
-                checkbox.id = name;
-                checkbox.addEventListener('change', () => {
-                    if (checkbox.checked) {
-                        if (selectedNames.length < 3) {
-                            selectedNames.push(name);
+            // 显示投票选项
+            function displayNameOptions() {
+                console.log('displayNameOptions function called');
+                const nameOptions = document.getElementById('nameOptions');
+                names.forEach(name => {
+                    console.log('Processing name:', name);
+                    const option = document.createElement('div');
+                    option.className = 'name-option';
+
+                    const checkbox = document.createElement('input');
+                    checkbox.type = 'checkbox';
+                    checkbox.id = name;
+                    checkbox.addEventListener('change', () => {
+                        if (checkbox.checked) {
+                            if (selectedNames.length < 3) {
+                                selectedNames.push(name);
+                            } else {
+                                checkbox.checked = false;
+                                alert('你只能选择3个姓名。');
+                            }
                         } else {
-                            checkbox.checked = false;
-                            alert('你只能选择3个姓名。');
+                            const index = selectedNames.indexOf(name);
+                            if (index > -1) {
+                                selectedNames.splice(index, 1);
+                            }
                         }
-                    } else {
-                        const index = selectedNames.indexOf(name);
-                        if (index > -1) {
-                            selectedNames.splice(index, 1);
-                        }
-                    }
-                });
-
-                const label = document.createElement('label');
-                label.htmlFor = name;
-                label.textContent = name;
-
-                const infoDiv = document.createElement('div');
-                infoDiv.classList.add('info-section');
-
-                Object.entries(info[name]).forEach(([key, value]) => {
-                    const infoItem = document.createElement('div');
-                    const title = document.createElement('div');
-                    title.classList.add('info-title');
-                    title.textContent = key;
-                    const description = document.createElement('p');
-                    description.textContent = value;
-                    infoItem.appendChild(title);
-                    infoItem.appendChild(description);
-                    infoDiv.appendChild(infoItem);
-                });
-
-                option.appendChild(checkbox);
-                option.appendChild(label);
-                option.appendChild(infoDiv);
-                nameOptions.appendChild(option);
-            });
-        }
-
-        // 提交投票，使用 update 方法仅更新选中项
-        const submitButton = document.getElementById('submitButton');
-        submitButton.addEventListener('click', async () => {
-            if (selectedNames.length === 3) {
-                try {
-                    const updates = {};
-                    selectedNames.forEach(name => {
-                        updates[name] = increment(1); // 使用增量更新
                     });
-                    await update(ref(database, 'votes'), updates);
-                    alert('投票成功！');
-                    // 清空选中状态
-                    selectedNames = [];
-                    document.querySelectorAll('input[type="checkbox"]').forEach(checkbox => {
-                        checkbox.checked = false;
+
+                    const label = document.createElement('label');
+                    label.htmlFor = name;
+                    label.textContent = name;
+
+                    const infoDiv = document.createElement('div');
+                    infoDiv.className = 'info-section';
+
+                    Object.entries(info[name] || {}).forEach(([key, value]) => {
+                        const infoItem = document.createElement('div');
+                        const title = document.createElement('div');
+                        title.className = 'info-title';
+                        title.textContent = key;
+                        const description = document.createElement('p');
+                        description.textContent = value;
+                        infoItem.appendChild(title);
+                        infoItem.appendChild(description);
+                        infoDiv.appendChild(infoItem);
+                    });
+
+                    option.appendChild(checkbox);
+                    option.appendChild(label);
+                    option.appendChild(infoDiv);
+                    nameOptions.appendChild(option);
+                });
+            }
+
+            // 提交投票，使用 update 方法仅更新选中项
+            const submitButton = document.getElementById('submitButton');
+            submitButton.addEventListener('click', async () => {
+                if (selectedNames.length === 3) {
+                    try {
+                        const updates = {};
+                        selectedNames.forEach(name => {
+                            updates[name] = increment(1); // 使用增量更新
+                        });
+                        await update(ref(database, 'votes'), updates);
+                        alert('投票成功！');
+                        // 清空选中状态
+                        selectedNames = [];
+                        document.querySelectorAll('input[type="checkbox"]').forEach(checkbox => {
+                            checkbox.checked = false;
+                        });
+                    } catch (error) {
+                        console.error('投票失败:', error);
+                        alert('投票失败: ' + error.message);
+                    }
+                } else {
+                    alert('请选择3个姓名进行投票。');
+                }
+            });
+
+            // 实时更新投票结果，动态计算百分比高度
+            const votesRef = ref(database, 'votes');
+            onValue(votesRef, (snapshot) => {
+                try {
+                    const currentVotes = snapshot.val() || {};
+                    const maxVotes = Math.max(...Object.values(currentVotes).filter(v => v)) || 1;
+                    const barChart = document.getElementById('barChart');
+                    barChart.innerHTML = '';
+                    names.forEach(name => {
+                        const voteCount = currentVotes[name] || 0;
+                        const bar = document.createElement('div');
+                        bar.className = 'bar';
+                        bar.style.height = `${(voteCount / maxVotes) * 100}%`;
+
+                        const barLabel = document.createElement('div');
+                        barLabel.className = 'bar-label';
+                        barLabel.textContent = name;
+
+                        const barValue = document.createElement('div');
+                        barValue.className = 'bar-value';
+                        barValue.textContent = voteCount;
+
+                        bar.appendChild(barLabel);
+                        bar.appendChild(barValue);
+                        barChart.appendChild(bar);
                     });
                 } catch (error) {
-                    alert('投票失败: ' + error.message);
+                    console.error('更新投票结果失败:', error);
                 }
-            } else {
-                alert('请选择3个姓名进行投票。');
-            }
-        });
-
-        // 实时更新投票结果，动态计算百分比高度
-        const votesRef = ref(database, 'votes');
-        onValue(votesRef, (snapshot) => {
-            const currentVotes = snapshot.val() || {};
-            const maxVotes = Math.max(...Object.values(currentVotes).filter(v => v)) || 1;
-            const barChart = document.getElementById('barChart');
-            barChart.innerHTML = '';
-            names.forEach(name => {
-                const voteCount = currentVotes[name] || 0;
-                const bar = document.createElement('div');
-                bar.classList.add('bar');
-                bar.style.height = `${(voteCount / maxVotes) * 100}%`;
-
-                const barLabel = document.createElement('div');
-                barLabel.classList.add('bar-label');
-                barLabel.textContent = name;
-
-                const barValue = document.createElement('div');
-                barValue.classList.add('bar-value');
-                barValue.textContent = voteCount;
-
-                bar.appendChild(barLabel);
-                bar.appendChild(barValue);
-                barChart.appendChild(bar);
             });
-        });
 
-        displayNameOptions();
+            // 直接执行初始化
+            displayNameOptions();
+
+        } catch (error) {
+            console.error('初始化失败:', error);
+        }
     </script>
 </body>
 
