@@ -8,19 +8,17 @@
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" rel="stylesheet">
     <title>芋圆大名投票</title>
     <style>
-    /* 优化后的字体设置 */
-    @font-face {
-      font-family: 'KaiTi';
-      src: 
-           local('STKaiti'),       /* 苹果系统楷体 */
-           url('https://example.com/kaiti.ttf') format('truetype'); /* 备用在线字体 */
-      font-weight: normal;
-      font-style: normal;
-    }
+        /* 引入字体，添加多级字体回退 */
+        @font-face {
+            font-family: 'KaiTi';
+            src: local('KaiTi'),
+                 local('STKaiti'),
+                 url('https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/fonts/kaiti.ttf') format('truetype');
+        }
 
         /* 全局样式 */
         body {
-            font-family: 'KaiTi', '华文楷体', '楷体', serif; /* 多级字体回退 */
+            font-family: 'KaiTi', '华文楷体', '楷体', serif;
             background-color: #f5f5dc;
             color: #333;
             margin: 0;
@@ -240,7 +238,7 @@
     <script type="module">
         // 引入 Firebase SDK
         import { initializeApp } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js";
-        import { getDatabase, ref, set, onValue, update } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-database.js";
+        import { getDatabase, ref, update, onValue, increment } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-database.js";
 
         // 你的 Firebase 配置信息
         const firebaseConfig = {
@@ -376,46 +374,42 @@
             });
         }
 
-        // 提交投票
+        // 提交投票，使用 update 方法仅更新选中项
         const submitButton = document.getElementById('submitButton');
-        submitButton.addEventListener('click', () => {
+        submitButton.addEventListener('click', async () => {
             if (selectedNames.length === 3) {
-                const votesRef = ref(database, 'votes');
-                onValue(votesRef, (snapshot) => {
-                    const currentVotes = snapshot.val() || {};
+                try {
+                    const updates = {};
                     selectedNames.forEach(name => {
-                        if (currentVotes[name]) {
-                            currentVotes[name]++;
-                        } else {
-                            currentVotes[name] = 1;
-                        }
+                        updates[name] = increment(1); // 使用增量更新
                     });
-                    set(votesRef, currentVotes);
+                    await update(ref(database, 'votes'), updates);
                     alert('投票成功！');
+                    // 清空选中状态
                     selectedNames = [];
-                    const checkboxes = document.querySelectorAll('input[type="checkbox"]');
-                    checkboxes.forEach(checkbox => {
+                    document.querySelectorAll('input[type="checkbox"]').forEach(checkbox => {
                         checkbox.checked = false;
                     });
-                }, {
-                    onlyOnce: true
-                });
+                } catch (error) {
+                    alert('投票失败: ' + error.message);
+                }
             } else {
                 alert('请选择3个姓名进行投票。');
             }
         });
 
-        // 实时更新投票结果
+        // 实时更新投票结果，动态计算百分比高度
         const votesRef = ref(database, 'votes');
         onValue(votesRef, (snapshot) => {
             const currentVotes = snapshot.val() || {};
+            const maxVotes = Math.max(...Object.values(currentVotes).filter(v => v)) || 1;
             const barChart = document.getElementById('barChart');
             barChart.innerHTML = '';
             names.forEach(name => {
                 const voteCount = currentVotes[name] || 0;
                 const bar = document.createElement('div');
                 bar.classList.add('bar');
-                bar.style.height = `${voteCount * 10}px`;
+                bar.style.height = `${(voteCount / maxVotes) * 100}%`;
 
                 const barLabel = document.createElement('div');
                 barLabel.classList.add('bar-label');
